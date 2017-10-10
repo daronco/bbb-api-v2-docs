@@ -201,7 +201,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -212,9 +212,6 @@
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -222,27 +219,79 @@
         <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
-            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+            <a href="#overview" class="toc-h1 toc-link" data-title="Overview">Overview</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#goals-and-requirements" class="toc-h2 toc-link" data-title="Overview">Goals and requirements</a>
+                  </li>
+                  <li>
+                    <a href="#api-design-rules" class="toc-h2 toc-link" data-title="Overview">API design rules</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
-          </li>
-          <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Kittens">Get All Kittens</a>
+                    <a href="#bearer-authentication" class="toc-h2 toc-link" data-title="Authentication">Bearer authentication</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Kittens">Get a Specific Kitten</a>
+                    <a href="#mac-authentication" class="toc-h2 toc-link" data-title="Authentication">MAC authentication</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Kittens">Delete a Specific Kitten</a>
+                    <a href="#server-side-validation" class="toc-h2 toc-link" data-title="Authentication">Server-side validation</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#meetings" class="toc-h1 toc-link" data-title="Meetings">Meetings</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#meeting-attributes" class="toc-h2 toc-link" data-title="Meetings">Meeting Attributes</a>
+                  </li>
+                  <li>
+                    <a href="#get-all-meetings" class="toc-h2 toc-link" data-title="Meetings">Get All Meetings</a>
+                  </li>
+                  <li>
+                    <a href="#get-meeting" class="toc-h2 toc-link" data-title="Meetings">Get Meeting</a>
+                  </li>
+                  <li>
+                    <a href="#create-meeting" class="toc-h2 toc-link" data-title="Meetings">Create Meeting</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#users" class="toc-h1 toc-link" data-title="Users">Users</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#user-attributes" class="toc-h2 toc-link" data-title="Users">User Attributes</a>
+                  </li>
+                  <li>
+                    <a href="#create-user" class="toc-h2 toc-link" data-title="Users">Create User</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#recordings" class="toc-h1 toc-link" data-title="Recordings">Recordings</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#recording-attributes" class="toc-h2 toc-link" data-title="Recordings">Recording Attributes</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#playback-formats" class="toc-h1 toc-link" data-title="Playback Formats">Playback Formats</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#playback-formats-attributes" class="toc-h2 toc-link" data-title="Playback Formats">Playback Formats Attributes</a>
                   </li>
               </ul>
           </li>
           <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
+          </li>
+          <li>
+            <a href="#references" class="toc-h1 toc-link" data-title="References">References</a>
           </li>
       </div>
         <ul class="toc-footer">
@@ -253,189 +302,960 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+        <h1 id='overview'>Overview</h1>
+<aside class="warning">
+  This is the specification of BigBlueButton's API version 2. This document is still not finished and might be largely modified before the API is released.
 </aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h2 id='goals-and-requirements'>Goals and requirements</h2>
+<ul>
+<li>It should be friendly to the developer and be explorable via a browser address bar.</li>
+<li>It should be simple, intuitive and consistent to make adoption not only easy but pleasant.</li>
+<li>It should be easy enough to add external modules that extend the API.</li>
+</ul>
+<h2 id='api-design-rules'>API design rules</h2>
+<p>(Use this also as guidelines when extending the API.)</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<ul>
+<li>No URL form encoding, JSON is used in all requests and responses. URL encoding doesn’t support data types and has no hierarchy [1].</li>
+<li>The authentication method uses HMAC-SHA256 to calculate the signature.</li>
+<li>The authentication method is based on OAuth 2.0. It supports a simple method when you have HTTPS, and a more complicated method which signs the request that can be used for both HTTP and HTTPS.</li>
+<li>Responses are always in JSON using the content type <code>application/json</code>.</li>
+<li>API calls return JSON values instead of redirects. The body of the response indicates whenever it should redirect the user to another URL.</li>
+<li>The major version of the API is included in the URL, as in “/api/v1/”.</li>
+<li>API calls that update or create a resource return the resource in their response.</li>
+<li>CamelCase is used on URLs and returned parameters.</li>
+<li>API calls return pretty formatted data by default. gzip compression is supported to reduce the size of the responses.</li>
+<li><code>PUT</code>, <code>PATCH</code> and <code>DELETE</code> are supported using the header <code>X-HTTP-Method-Override</code> and using the parameter <code>_method=PATCH</code> in the URL.</li>
+<li>Successful responses might include no data. Check for successful responses using the status code. Error responses will always have content with information about the error that happened.</li>
+<li>The API doesn&#39;t use sessions nor cookies.</li>
+<li>Parameters to filter or order results (e.g. “users=true”) can be sent in the URL or as part of the content of the request’s body. More complex parameters, such as the attributes of a resource being created (e.g. attributes of a meeting being created) should always be send in the body of the request.</li>
+<li>All times are in UTC, using always the ISO8601 format including the milliseconds. For example: &quot;2012-01-01T12:00:00.000Z&quot;.</li>
+</ul>
+<h1 id='authentication'>Authentication</h1>
+<p>The authentication method is based on OAuth 2.0, with some extensions. There are two types of authentication supported:</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
+<ol>
+<li>Bearer (recommended): In this mode the Authorization HTTP header has the value <code>Bearer</code> followed by a space then the text value of the authentication token (shared secret). To use Bearer authentication, you <strong>MUST</strong> use an HTTPS connection.</li>
+<li>MAC: This mode signs the request by using an HMAC algorithm keyed using the authentication token (shared secret). This is a modification of OAuth 2.0 to use a static shared secret rather than dynamic authentication tokens.</li>
+</ol>
 
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
+<p>If you are using an insecure HTTP connection, you <strong>MUST</strong> use MAC authentication. You <strong>MAY</strong> use MAC authentication on an HTTPS connection, but Bearer is preferred since it&#39;s simpler.</p>
+<h2 id='bearer-authentication'>Bearer authentication</h2>
+<p>Simply include the server&#39;s shared secret in the <code>Authorization</code> header following the word &quot;Bearer&quot; and a space. Example: <code>Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2</code>.</p>
+<h2 id='mac-authentication'>MAC authentication</h2>
+<p>This authentication method is based on <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05</a>. Note that this specification does not include support for protecting body content, so the following description extends the protection via the HTTP &quot;Digest&quot; header.</p>
+
+<p>The core steps are as follows:</p>
+
+<ol>
+<li><p>If the request contains a body, create an HTTP &quot;Digest&quot; header using the SHA-256 algorithm as specified in <a href="http://tools.ietf.org/html/rfc5843">http://tools.ietf.org/html/rfc5843</a>. For example: <code>Digest: SHA-256=MWVkMWQxYTRiMzk5MDQ[...]NTQwYzI2M2QwM2U2MQ==</code>.</p></li>
+<li><p>Create the HTTP &quot;Authentication&quot; header according to <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05#section-5">https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05#section-5</a>, using only the following parameters:</p></li>
+</ol>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value and description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>kid</td>
+<td>&quot;&quot; (an empty string)</td>
+</tr>
+<tr>
+<td>ts</td>
+<td>The timestamp</td>
+</tr>
+<tr>
+<td>mac</td>
+<td>You <strong>MUST</strong> use <code>hmac-sha-256</code>. The &quot;key&quot; value used in the hmac calculation is the authentication token (shared secret).</td>
+</tr>
+<tr>
+<td>h</td>
+<td><code>host:digest:content-type</code></td>
+</tr>
+</tbody></table>
+
+<p><strong>Important</strong>: <strong>MUST NOT</strong> include the parameter <code>access_token</code> in any request.</p>
+<h3 id='mac-authentication-example'>MAC authentication Example</h3>
+<blockquote>
+<p>1: Initial header and body of a request to the API:</p>
+</blockquote>
+<pre class="highlight http tab-http"><code><span class="nf">POST</span> <span class="nn">/bigbluebutton/api/v1/meeting/Demo%20Meeting?running=false</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">dev.bigbluebutton.org</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Connection</span><span class="p">:</span> <span class="s">close</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">Example User Agent</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">76</span>
+
+<span class="p">{</span><span class="w"> </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w"> </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My meeting"</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>2: Calculate the SHA-256 digest of the body:</p>
+</blockquote>
+<pre class="highlight sh tab-shell"><code><span class="gp">$ </span><span class="nb">printf</span> <span class="s1">'{ "meetingId": "random-9826-kksu", "name": "My meeting" }\n'</span> |
+    openssl dgst -sha256 -binary | openssl enc -base64
+XS+iykWgp5hI3MSy0/yIsvf7Z/iajin9w+A/HOd5VLo<span class="o">=</span>
 </code></pre>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>3: Request with the digest header:</p>
+</blockquote>
+<pre class="highlight http tab-http"><code><span class="nf">POST</span> <span class="nn">/bigbluebutton/api/v1/meeting/Demo%20Meeting?running=false</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">dev.bigbluebutton.org</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Connection</span><span class="p">:</span> <span class="s">close</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">Example User Agent</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">76</span>
+<span class="na">Digest</span><span class="p">:</span> <span class="s">SHA-256=XS+iykWgp5hI3MSy0/yIsvf7Z/iajin9w+A/HOd5VLo=</span>
+
+<span class="p">{</span><span class="w"> </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w"> </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My meeting"</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>4: MAC input string:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>POST /bigbluebutton/api/v1/meeting/Demo%20Meeting?running=false HTTP/1.1
+dev.bigbluebutton.org
+SHA-256=XS+iykWgp5hI3MSy0/yIsvf7Z/iajin9w+A/HOd5VLo=
+application/json
+1431102122
+</code></pre>
+<blockquote>
+<p>5: Calculate the MAC for the authorization header:</p>
+</blockquote>
+<pre class="highlight sh tab-shell"><code><span class="gp">$ </span>openssl dgst -sha256 -hmac <span class="s1">'6b3701cbbedb4ba88b79920d8c2955f2'</span> -binary <span class="se">\</span>
+    &lt; mac_input.txt | openssl enc -base64
++p0UNFXe+1Z0E6yLxhAz+LfYUO0EG9z6o/hN1ZgAIe4<span class="o">=</span>
+</code></pre>
+<blockquote>
+<p>6: Final request with the <code>Authorization</code> header:</p>
+</blockquote>
+<pre class="highlight http tab-http"><code><span class="nf">POST</span> <span class="nn">/bigbluebutton/api/v1/meeting/Demo%20Meeting?running=false</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">dev.bigbluebutton.org</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Connection</span><span class="p">:</span> <span class="s">close</span>
+<span class="na">User-Agent</span><span class="p">:</span> <span class="s">Example User Agent</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">76</span>
+<span class="na">Digest</span><span class="p">:</span> <span class="s">SHA-256=XS+iykWgp5hI3MSy0/yIsvf7Z/iajin9w+A/HOd5VLo=</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">MAC kid="",</span>
+<span class="s">    ts=1431102122,</span>
+<span class="s">    h="host:digest:content-type",</span>
+<span class="s">    mac=+p0UNFXe+1Z0E6yLxhAz+LfYUO0EG9z6o/hN1ZgAIe4=</span>
+
+<span class="p">{</span><span class="w"> </span><span class="s2">"meetingID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w"> </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My meeting"</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This example is fabricated and may not represent a real request, but illustrates the full usage of this authentication method. For the purpose of calculating the body checksum, the body content in this example is terminated in a single unix newline. Relevant values used in this example are:</p>
+
+<ul>
+<li>Authorization token (shared secret): ASCII string <code>6b3701cbbedb4ba88b79920d8c2955f2</code>.</li>
+<li>Timestamp: <code>1431102122</code>, which represents <code>Fri May 8 16:22:02 UTC 2015</code>.</li>
+</ul>
+
+<p>Steps to calculate the authentication headers:</p>
+
+<ol>
+<li>Assume an initial request.</li>
+<li>Calculate the SHA-256 digest of the body. This can be done on the unix command line with openssl.</li>
+<li>Add the digest header to the request.</li>
+<li>Create the MAC input string for the <code>Authorization</code> header. Since the value of the <code>h</code> parameter is <code>host:digest:content-type</code>, all of those headers (the host, the digest, and the content-type) must be included - once - if present in the message. A header being absent is not an error, and is skipped when generating the MAC input string. The order of fields is:
+
+<ul>
+<li>The first line of the HTTP request.</li>
+<li>The value of each header field listed in the h parameter, in the order listed in that parameter. If a header is not present in the request, it is skipped.</li>
+<li>The timestamp.</li>
+<li>If present, the seq-nr field.</li>
+<li>All lines (including the last line) are terminated with a unix newline <code>\n</code>.</li>
+</ul></li>
+<li>The MAC for the Authorization header can then be generated from the input string using a unix command.</li>
+<li>Add the HTTP <code>Authorization</code> header to the message using the parameters as specified above.</li>
+</ol>
+<h2 id='server-side-validation'>Server-side validation</h2>
+<p>When doing server-side validation of authentication, ensure to validate the following parameters:</p>
+<h3 id='for-bearer-authorization'>For Bearer Authorization</h3>
+<p>Bearer Authorization <strong>MUST NOT</strong> be accepted on an insecure HTTP connection.</p>
+<h3 id='for-mac-authorization'>For MAC Authorization</h3>
+<ul>
+<li>The <code>h</code> parameter on the Authorization header <strong>MUST</strong> contain host, digest, content-type (in any order). It <strong>MAY</strong> contain additional header names.</li>
+<li>If the request type includes a body the Content-Type header <strong>MUST</strong> be <code>application/json</code> unless otherwise specified for that API endpoint.</li>
+<li>When using MAC authorization on a request type that includes a body, the Digest header <strong>MUST</strong> be included. If the Digest header is missing, return an authentication failure.</li>
+<li>The Digest header <strong>MUST</strong> include SHA-256. Other digest types <strong>MAY</strong> be included in addition to SHA-256.</li>
+<li>The server <strong>MUST</strong> reject requests where the <code>ts</code> parameter is too far in the past. A suggested maximum time delta is 30 seconds.</li>
+<li>The <code>seq-nr</code> parameter is not currently supported, and will be ignored. However, if present in a request, it <strong>MUST</strong> be included when calculating the authorization MAC.</li>
+</ul>
+<h1 id='meetings'>Meetings</h1><h2 id='meeting-attributes'>Meeting Attributes</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"createTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T12:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"startTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T14:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceBridge"</span><span class="p">:</span><span class="w"> </span><span class="mi">76999</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"dialNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"613-555-1234"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"running"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasUserJoined"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasBeenForciblyEnded"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"listenerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceUserCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"videoCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"maxUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"welcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorOnlyMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"You’re a moderator, please use your powers wisely."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"logoutUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-logout-url"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"autoStartRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"allowStartStopRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"courseName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English 101"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"integrationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Moodle"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"users"</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">Attributes&gt;</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">Attributes&gt;</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>meetingId</td>
+<td>String</td>
+<td>The external meeting ID, as defined by an external application when the meeting was created via API.</td>
+</tr>
+<tr>
+<td>meetingId</td>
+<td>String</td>
+<td>The unique meeting ID, as defined internally after the meeting was created. This ID is unique in this server, it will never be used for more than one meeting.</td>
+</tr>
+<tr>
+<td>createTime</td>
+<td>DateTime</td>
+<td>The time when the meeting was created on the server.</td>
+</tr>
+<tr>
+<td>startTime</td>
+<td>DateTime</td>
+<td>The time corresponding to when the meeting started (i.e. the first user joined the session). Will be null if the meeting hasn’t started yet.</td>
+</tr>
+<tr>
+<td>endTime</td>
+<td>DateTime</td>
+<td>The unix timestamp corresponding to the time the meeting ended (i.e. the meeting was removed from the server’s memory). Will be zero if the meeting hasn’t ended yet.</td>
+</tr>
+<tr>
+<td>voiceBridge</td>
+<td>Integer</td>
+<td>The meeting’s voice bridge.</td>
+</tr>
+<tr>
+<td>dialNumber</td>
+<td>String</td>
+<td>The meeting’s dial number.</td>
+</tr>
+<tr>
+<td>running</td>
+<td>Boolean</td>
+<td>Whether the meeting is running or not.</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>Integer</td>
+<td>The duration set when the meeting was created. Defaults to &quot;0&quot;.</td>
+</tr>
+<tr>
+<td>hasUserJoined</td>
+<td>Boolean</td>
+<td>Whether a user already joined the meeting or not.</td>
+</tr>
+<tr>
+<td>recording</td>
+<td>Boolean</td>
+<td>Whether the meeting has the recording capabilities on or not.</td>
+</tr>
+<tr>
+<td>hasBeenForciblyEnded</td>
+<td>Boolean</td>
+<td>Whether the meeting has been ended by a call to the &quot;end&quot; API call or not.</td>
+</tr>
+<tr>
+<td>userCount</td>
+<td>Integer</td>
+<td>The total number of users (i.e. total number of users minus the moderators) in the conference.</td>
+</tr>
+<tr>
+<td>moderatorCount</td>
+<td>Integer</td>
+<td>The total number of moderators (i.e. total number of users minus the users) in the conference.</td>
+</tr>
+<tr>
+<td>listenerCount</td>
+<td>Integer</td>
+<td>The number of users with the &quot;listen only&quot; mode active.</td>
+</tr>
+<tr>
+<td>voiceUserCount</td>
+<td>Integer</td>
+<td>The number of users sharing their microphone.</td>
+</tr>
+<tr>
+<td>videoCount</td>
+<td>Integer</td>
+<td>The number of users sharing their webcam.</td>
+</tr>
+<tr>
+<td>maxUsers</td>
+<td>Integer</td>
+<td>The maximum number of users allowed into the conference, as set when the meeting was created. If zero, it means it was not set.</td>
+</tr>
+<tr>
+<td>welcome</td>
+<td>String</td>
+<td>The welcome message that will be shown in the chat to all users. When setting in a meeting, you can include keywords (<code>%%CONFNAME%%</code>, <code>%%DIALNUM%%</code>, <code>%%CONFNUM%%</code>) which will be substituted automatically.</td>
+</tr>
+<tr>
+<td>moderatorOnlyMessage</td>
+<td>String</td>
+<td>A message that is displayed to all the moderators in the chat.</td>
+</tr>
+<tr>
+<td>logoutURL</td>
+<td>String</td>
+<td>The URL that the BigBlueButton client will go to after users click the OK button on the &#39;You have been logged out message&#39;.</td>
+</tr>
+<tr>
+<td>autoStartRecording</td>
+<td>Boolean</td>
+<td>This meeting will automatically starts recording when first user joins. NOTE: Don&#39;t set to autoStartRecording to false and allowStartStopRecording to false as the user won&#39;t be able to record.</td>
+</tr>
+<tr>
+<td>allowStartStopRecording</td>
+<td>Boolean</td>
+<td>This meeting allows the user to start/stop recording. This means the meeting can start recording automatically (autoStartRecording=true) with the user able to stop/start recording from the client.</td>
+</tr>
+<tr>
+<td>locale</td>
+<td>String</td>
+<td>The default locale for the meeting (overrides the server&#39;s default).</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>Object</td>
+<td>A JSON object containing all the metadata information set when the meeting was created (or the metadata to be used when the meeting is being created). Will be an empty object ({}) if there is no metadata set for the meeting.</td>
+</tr>
+<tr>
+<td>users</td>
+<td>Array</td>
+<td>An array of user resources corresponding to all users that are participating in the meeting. Will be an empty array if there are no users in the meeting. By default is not used, will only be present in some specific API calls.</td>
+</tr>
+</tbody></table>
+<h2 id='get-all-meetings'>Get All Meetings</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://example.com/api/v2/meetings"</span>
+  -H <span class="s2">"Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T12:25:03.520Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"startTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T14:25:03.520Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"voiceBridge"</span><span class="p">:</span><span class="w"> </span><span class="mi">76999</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"dialNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"613-555-1234"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"running"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"hasUserJoined"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"recording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"hasBeenForciblyEnded"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"moderatorCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"listenerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"voiceUserCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"videoCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"maxUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"welcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"moderatorOnlyMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"You’re a moderator, please use your powers wisely."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"logoutUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-logout-url"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"autoStartRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"allowStartStopRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"courseName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English 101"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"integrationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Moodle"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
+<p>This endpoint retrieves all meetings currently created in the server. A meeting can be created but not running, so this can return also meetings that are not running.</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
+<p><code>GET https://example.com/api/v2/meetings</code></p>
 <h3 id='query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
 <th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
+<td>onlyRunning</td>
+<td>No</td>
 <td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>If set to true, returns only the meetings currently running.</td>
 </tr>
 <tr>
-<td>available</td>
+<td>includeUsers</td>
+<td>No</td>
 <td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>If set to true, the result will also include the users currently in the meeting.</td>
 </tr>
 </tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<h2 id='get-meeting'>Get Meeting</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://example.com/api/v2/meetings/e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span>
+  -H <span class="s2">"Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"</span>
 </code></pre>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"createTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T12:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"startTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T14:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceBridge"</span><span class="p">:</span><span class="w"> </span><span class="mi">76999</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"dialNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"613-555-1234"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"running"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasUserJoined"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasBeenForciblyEnded"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"listenerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceUserCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"videoCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"maxUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"welcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorOnlyMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"You’re a moderator, please use your powers wisely."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"logoutUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-logout-url"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"autoStartRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"allowStartStopRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"courseName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English 101"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"integrationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Moodle"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>Returns information about an specific meeting.</p>
 <h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<p><code>GET https://example.com/api/v2/meetings/:id</code></p>
 <h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>:id</td>
+<td>Yes</td>
+<td></td>
+<td>The unique ID of the meeting to retrieve</td>
+</tr>
+<tr>
+<td>includeUsers</td>
+<td>No</td>
+<td>true</td>
+<td>If set to true, the result will also include the users currently in the meeting.</td>
 </tr>
 </tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -X DELETE
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<h2 id='create-meeting'>Create Meeting</h2><pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://example.com/api/v2/meetings"</span>
+  -H <span class="s2">"Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"</span>
+  -d <span class="s1">'{ 
+    "meetingId": "random-9826-kksu",
+    "name": "Test",
+    "voiceBridge": 76999,
+    "dialNumber": "613-555-1234",
+    "duration": 120,
+    "recording": true,
+    "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
+    "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
+    "logoutUrl": "https://my-server/my-logout-url",
+    "autoStartRecording": false,
+    "allowStartStopRecording": true,
+    "locale": "en_US",
+    "metadata": {
+        "courseName": "English 101",
+        "integrationName": "Moodle"
+    }
+  }'</span>
 </code></pre>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"createTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T12:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"startTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T14:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceBridge"</span><span class="p">:</span><span class="w"> </span><span class="mi">76999</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"dialNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"613-555-1234"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"running"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasUserJoined"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasBeenForciblyEnded"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"listenerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceUserCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"videoCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"maxUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"welcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"moderatorOnlyMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"You’re a moderator, please use your powers wisely."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"logoutUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-logout-url"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"autoStartRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"allowStartStopRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"courseName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English 101"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"integrationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Moodle"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
+<p>Creates a meeting. Expects a meeting in the body of the request with the attributes that will be used to create it.</p>
 <h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
+<p><code>POST https://example.com/api/v2/meetings/</code></p>
+<h3 id='meeting-attributes-accepted'>Meeting attributes accepted</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>meetingId</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>name</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>recording</td>
+<td>No</td>
+<td>false</td>
+</tr>
+<tr>
+<td>voiceBridge</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>duration</td>
+<td>No</td>
+<td>0</td>
+</tr>
+<tr>
+<td>welcome</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>logoutUrl</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>moderatorOnlyMessage</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>autoStartRecording</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>allowStartStopRecording</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>No</td>
+<td>{}</td>
+</tr>
+</tbody></table>
+<h1 id='users'>Users</h1><h2 id='user-attributes'>User Attributes</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-1893-oakid"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-1893-oakid_1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Richard Alam"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"moderator"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-avatar.png"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"isPresenter"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TwoWay"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WebRTC"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasVideo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"clientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HTML5"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userAgent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"userAge"</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userRoleOnMoodle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Professor - English 101"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"clients"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"WebFlash"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/client.html?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"HTML5"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/html5?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"Mobile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/mobile.html?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
+<td>fullName</td>
+<td>String</td>
+<td>The user’s full name.</td>
+</tr>
+<tr>
+<td>role</td>
+<td>String</td>
+<td>The user’s role in the conference. One of: <code>moderator</code>, <code>attendee</code>.</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>String</td>
+<td>The user’s external identifier.</td>
+</tr>
+<tr>
+<td>uniqueUserId</td>
+<td>String</td>
+<td>The user’s unique identifier.</td>
+</tr>
+<tr>
+<td>meetingId</td>
+<td>String</td>
+<td>The identifier of the meeting the user is in.</td>
+</tr>
+<tr>
+<td>uniqueMeetingId</td>
+<td>String</td>
+<td>The unique identifier of the meeting the user is in.</td>
+</tr>
+<tr>
+<td>avatarUrl</td>
+<td>String</td>
+<td>The link for the user&#39;s avatar to be displayed when the &quot;displayAvatar&quot; feature if on.</td>
+</tr>
+<tr>
+<td>isPresenter</td>
+<td>Boolean</td>
+<td>Whether the user is a presenter or not.</td>
+</tr>
+<tr>
+<td>voiceMode</td>
+<td>String</td>
+<td>How the user has joined the voice conference. If the user is not in any type of voice conference, will return null. Otherwise it will be one of the values: &quot;ListenOnly&quot;, &quot;TwoWay&quot;.</td>
+</tr>
+<tr>
+<td>voiceMethod</td>
+<td>String</td>
+<td>The method (mechanism, technology) used by the user to join the voice conference. If the user is not in any type of voice conference, will return null. Otherwise it will be one of the values: &quot;WebRTC&quot;, &quot;SIP&quot;, &quot;Flash&quot;.</td>
+</tr>
+<tr>
+<td>hasVideo</td>
+<td>Boolean</td>
+<td>Whether the user is sharing his webcam.</td>
+</tr>
+<tr>
+<td>clientType</td>
+<td>String</td>
+<td>A string defining the generic type of client the user is on. If the user hasn’t joined yet, it will be null. Supported values are: &quot;WebFlash&quot;, &quot;HTML5&quot;, &quot;Mobile&quot;.</td>
+</tr>
+<tr>
+<td>userAgent</td>
+<td>String</td>
+<td>The string with the &quot;User-Agent&quot; HTTP header sent by the user when joining the session, if any.</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>Object</td>
+<td>A JSON object containing all the metadata information set when the user was created (or the metadata to be used when the user is being created). Will be an empty object ({}) if there is no metadata set.</td>
+</tr>
+<tr>
+<td>clients</td>
+<td>Object</td>
+<td>A JSON object with the URLs for all the clients available for the user to join. Clients are indexed by their type and each client consists of: 1) a URL the user should be redirected to to effectively join the meeting; 2) a flag indicating whether the client is the default client or not (only one of the clients should have this flag set). Example: <code>{ &quot;HTML5&quot;: { url: &quot;https://bigbluebutton.org/html5?token=123123123&quot;, default: false }, &quot;WebFlash&quot;: { url: &quot;https://bigbluebutton.org/client.html?token=123123123&quot;, default: true }</code>.</td>
+</tr>
+</tbody></table>
+<h2 id='create-user'>Create User</h2><pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://example.com/api/v2/meetings"</span>
+  -H <span class="s2">"Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"</span>
+  -d <span class="s1">'{ 
+    "userId": "user-1893-oakid",
+    "fullName": "Richard Alam",
+    "role": "moderator",
+    "avatarUrl": "https://my-server/my-image.jpg",
+    "metadata": {
+        "worksAt": "BigBlueButton",
+        "roleOnMoodle": "Professor - Filipino 101"
+    }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-1893-oakid"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-1893-oakid_1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uniqueMeetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Richard Alam"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"moderator"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-server/my-avatar.png"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"isPresenter"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TwoWay"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"voiceMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WebRTC"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hasVideo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"clientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HTML5"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"userAgent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"userAge"</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userRoleOnMoodle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Professor - English 101"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"clients"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"WebFlash"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/client.html?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"HTML5"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/html5?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"Mobile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://bigbluebutton.org/mobile.html?token=9dulgkl72kmy"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Create a user into a meeting previously created.</p>
+
+<p>This API call will simply register a new user in the meeting, but the user will not yet join the meeting. It responds with a list of URLs for the available clients that the user can access to effectively join.</p>
+
+<p>The client URLs have an access token encoded in them. This token will be unique and can be only used once. When the user accesses the client URL, it will validate the token and then invalidate it for future uses. The page rendered by this URL will be responsible for maintaining the user session in a way that the user is able to reconnect to the conference when necessary without having to access the client URL (the one that contains the token) again and without having to perform an API call again.</p>
+
+<p>Expects a user in the body of the request with the attributes that will be used to create it.</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>POST https://example.com/api/v2/meetings/:id/users</code></p>
+<h3 id='user-attributes-accepted'>User attributes accepted</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>userId</td>
+<td>No</td>
+<td>A random string</td>
+</tr>
+<tr>
+<td>fullName</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>role</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>avatarUrl</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>locale</td>
+<td>No</td>
+<td>The meeting&#39;s locale</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>No</td>
+<td>{}</td>
+</tr>
+</tbody></table>
+<h1 id='recordings'>Recordings</h1><h2 id='recording-attributes'>Recording Attributes</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"recordingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"183f0bf3a0982a127bdb8161-1383782781"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"random-9826-kksu"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On-line session for CS 101"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"startTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T12:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-09-05T14:25:03.520Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test Recording"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English 232 session"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First Class"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"creator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fred Dixon"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"contributor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Richard Alam"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en_US"</span><span class="p">,</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"playbackFormats"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="err">&lt;Playback</span><span class="w"> </span><span class="err">Format</span><span class="w"> </span><span class="err">Attributes&gt;</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="err">&lt;Playback</span><span class="w"> </span><span class="err">Format</span><span class="w"> </span><span class="err">Attributes&gt;</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>recordingId</td>
+<td>String</td>
+<td>The recording identifier.</td>
+</tr>
+<tr>
+<td>meetingId</td>
+<td>String</td>
+<td>The meeting identifier of the meeting that generated the recording.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>The name of the recording, that is the same name given to the meeting that generated the recording.</td>
+</tr>
+<tr>
+<td>startTime</td>
+<td>DateTime</td>
+<td>The “startTime” of the meeting that generated the recording.</td>
+</tr>
+<tr>
+<td>endTime</td>
+<td>DateTime</td>
+<td>The “endTime” of the meeting that generated the recording.</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>Object</td>
+<td>A JSON object containing all the metadata information set in the meeting that generated this recording. Will be an empty object ({}) if there is no metadata set for the meeting.</td>
+</tr>
+<tr>
+<td>playbackFormats</td>
+<td>Array</td>
+<td>An array of playback formats, see Playback Format Attributes.</td>
+</tr>
+</tbody></table>
+<h1 id='playback-formats'>Playback Formats</h1><h2 id='playback-formats-attributes'>Playback Formats Attributes</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"presentation"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://test-install.blindsidenetworks.com/playback/presentation/0.9.0/playback.html?meetingId=odlk9s01f337f38d8ldki9s893a043551d10e6c1-1445418877676"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"length"</span><span class="p">:</span><span class="w"> </span><span class="s2">"360"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>A string with the name that defines this playback format.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String</td>
+<td>The URL to access the recording using this playback format.</td>
+</tr>
+<tr>
+<td>length</td>
+<td>Integer</td>
+<td>The length of the recording.</td>
 </tr>
 </tbody></table>
 <h1 id='errors'>Errors</h1>
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
+<p>Errors are returned as a JSON in the format seen beside.</p>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">“error”</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"code"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"message"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Something bad happened :("</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"More details about the error here"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>List of possible errors:</p>
 
-<p>The Kittn API uses the following error codes:</p>
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>123</td>
+<td>Something wrong.</td>
+</tr>
+<tr>
+<td>321</td>
+<td>Something else also wrong.</td>
+</tr>
+</tbody></table>
+
+<p>List of possible HTTP status codes on error:</p>
 
 <table><thead>
 <tr>
@@ -445,35 +1265,35 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request -- Your request sucks</td>
+<td>Bad Request -- Your request sucks.</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized -- Your API key is wrong</td>
+<td>Unauthorized -- Your API key is wrong.</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only</td>
+<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found -- The specified kitten could not be found</td>
+<td>Not Found -- The specified kitten could not be found.</td>
 </tr>
 <tr>
 <td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method</td>
+<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
 </tr>
 <tr>
 <td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json</td>
+<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
 </tr>
 <tr>
 <td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers</td>
+<td>Gone -- The kitten requested has been removed from our servers.</td>
 </tr>
 <tr>
 <td>418</td>
-<td>I&#39;m a teapot</td>
+<td>I&#39;m a teapot.</td>
 </tr>
 <tr>
 <td>429</td>
@@ -488,14 +1308,27 @@ Remember — a happy kitten is an authenticated kitten!
 <td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
 </tr>
 </tbody></table>
+<h1 id='references'>References</h1>
+<ul>
+<li>[1] http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api</li>
+<li>[2] https://leanpub.com/build-apis-you-wont-hate</li>
+<li>[3] https://www.stormpath.com/blog/designing-rest-json-apis</li>
+<li>[4] http://www.stormpath.com/blog/secure-your-rest-api-right-way</li>
+<li>[5] https://groups.google.com/forum/#!topic/nodejs/2zCXZ10jFbg</li>
+<li>[6] http://www.thebuzzmedia.com/designing-a-secure-rest-api-without-oauth-authentication/</li>
+<li>[7] http://security.stackexchange.com/questions/18607/securing-a-rest-api-is-api-secret-signing-and-ssl-enough</li>
+<li>[8] https://dev.twitter.com/docs/auth/creating-signature</li>
+<li>[9] https://dev.twitter.com/docs/auth/oauth</li>
+<li>[10] http://ostermiller.org/calc/encode.html
+http://oauth.googlecode.com/svn/spec/ext/body_hash/1.0/oauth-bodyhash.html#parameter
+https://developer.mastercard.com/portal/display/api/Java+OAuth+Sample+Code</li>
+<li>[11] https://stripe.com/docs/api#versioning (Stripe versioning)</li>
+</ul>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>

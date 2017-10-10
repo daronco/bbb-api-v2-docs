@@ -1,0 +1,17 @@
+<h1 id='to-be-defined'>To Be Defined</h1>
+<ul>
+<li>Accept the parameters in the URL too, makes it easier for an API Mate-like tool. Possible with Bearer or only HMAC?</li>
+<li>Amazon&#39;s AWS authentication is easier and maybe better.</li>
+<li>Options to return or not return nested resources</li>
+<li>Easily extendable, how?</li>
+<li>Guildelines on how to add parameters, use more metadata</li>
+<li>Use more internalMeetingId and internalUserId as unique identifiers</li>
+<li>jsonapi.org</li>
+<li>Mudar o camelcase?</li>
+<li>Specify possible metadata values/format</li>
+<li>Accommodate new requirements (e.g. upload presentation to a running session)</li>
+<li><p>Sort options, attribute filtering options, pagination (see https://bestbuyapis.github.io/api-documentation/#sort)</p></li>
+<li><p>In case a more specific version is required, include it in the headers. (See [1] and [11]: “I&#39;m a big fan of the approach that Stripe has taken to API versioning - the URL has a major version number (v1), but the API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the API as a whole while the sub-versions accounts for smaller changes (field deprecations, endpoint changes, etc).”)</p></li>
+<li><p>Use the correct HTTP status code for success and error responses. (Define which)</p></li>
+<li><p>No URL parameters that require percent encoding or allow arbitrary user input are used. If necessary, percent encode to encode parameters and values passed in the URL. Calculate the checksum after percent encoding the values. (Use normalized encoding method defined in OAuth 1a)</p></li>
+</ul>
