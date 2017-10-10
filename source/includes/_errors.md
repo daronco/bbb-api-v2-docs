@@ -1,9 +1,25 @@
 # Errors
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
+Errors are returned as a JSON in the format seen beside.
 
-The Kittn API uses the following error codes:
+```json
+{
+    “error”: {
+        "code" : 1234,
+        "message" : "Something bad happened :(",
+        "description" : "More details about the error here"
+    }
+}
+```
 
+List of possible errors:
+
+Error Code | Message
+---------- | -------
+123 | Something wrong.
+321 | Something else also wrong.
+
+List of possible HTTP status codes on error:
 
 Error Code | Meaning
 ---------- | -------
