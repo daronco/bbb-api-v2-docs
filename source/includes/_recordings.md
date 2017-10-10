@@ -19,14 +19,7 @@
         "contributor": "Richard Alam",
         "language": "en_US",
     },
-    "playbackFormats": [
-        {
-            <Playback Format Attributes>
-        },
-        {
-            <Playback Format Attributes>
-        }
-    ]
+    "playbackFormats": []
 }
 ```
 

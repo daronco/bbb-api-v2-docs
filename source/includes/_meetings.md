@@ -33,14 +33,7 @@
         "courseName": "English 101",
         "integrationName": "Moodle"
     },
-    "users" [
-        {
-            <User Attributes>
-        },
-        {
-            <User Attributes>
-        }
-    ]
+    "users" []
 }
 ```
 
