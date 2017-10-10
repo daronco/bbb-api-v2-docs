@@ -32,8 +32,7 @@
     "metadata": {
         "courseName": "English 101",
         "integrationName": "Moodle"
-    },
-    "users" []
+    }
 }
 ```
 
@@ -64,51 +63,83 @@ autoStartRecording     | Boolean | This meeting will automatically starts record
 allowStartStopRecording | Boolean | This meeting allows the user to start/stop recording. This means the meeting can start recording automatically (autoStartRecording=true) with the user able to stop/start recording from the client.
 locale                  | String  | The default locale for the meeting (overrides the server's default).
 metadata                | Object  | A JSON object containing all the metadata information set when the meeting was created (or the metadata to be used when the meeting is being created). Will be an empty object ({}) if there is no metadata set for the meeting.
-users                   | Array   | An array of user resources corresponding to all users that are participating in the meeting. Will be an empty array if there are no users in the meeting. By default is not used, will only be present in some specific API calls.
 
 ## Get All Meetings
 
 ```shell
-curl "https://example.com/api/v2/meetings"
+curl "https://example.com/api/v2/meetings?include=users"
   -H "Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"
 ```
 
 > Response:
 
 ```json
-[
-    {
-        "meetingId": "random-9826-kksu",
-        "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
-        "name": "Test",
-        "createTime": "2015-09-05T12:25:03.520Z",
-        "startTime": "2015-09-05T14:25:03.520Z",
-        "endTime": "0",
-        "voiceBridge": 76999,
-        "dialNumber": "613-555-1234",
-        "running": true,
-        "duration": 120,
-        "hasUserJoined": true,
-        "recording": true,
-        "hasBeenForciblyEnded": false,
-        "userCount": 5,
-        "moderatorCount": 2,
-        "listenerCount": 4,
-        "voiceUserCount": 3,
-        "videoCount": 3,
-        "maxUsers": 0,
-        "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
-        "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
-        "logoutUrl": "https://my-server/my-logout-url",
-        "autoStartRecording": false,
-        "allowStartStopRecording": true,
-        "locale": "en_US",
-        "metadata": {
-            "courseName": "English 101",
-            "integrationName": "Moodle"
+{
+    "data": [{
+        "type": "meeting",
+        "id": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+        "attributes": {
+            "meetingId": "random-9826-kksu",
+            "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+            "name": "Test",
+            "createTime": "2015-09-05T12:25:03.520Z",
+            "startTime": "2015-09-05T14:25:03.520Z",
+            "endTime": "0",
+            "voiceBridge": 76999,
+            "dialNumber": "613-555-1234",
+            "running": true,
+            "duration": 120,
+            "hasUserJoined": true,
+            "recording": true,
+            "hasBeenForciblyEnded": false,
+            "userCount": 5,
+            "moderatorCount": 2,
+            "listenerCount": 4,
+            "voiceUserCount": 3,
+            "videoCount": 3,
+            "maxUsers": 0,
+            "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
+            "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
+            "logoutUrl": "https://my-server/my-logout-url",
+            "autoStartRecording": false,
+            "allowStartStopRecording": true,
+            "locale": "en_US",
+            "metadata": {
+                "courseName": "English 101",
+                "integrationName": "Moodle"
+            }
+        },
+        "relationships": {
+            "users": {
+                "data": { "type": "user", id: "user-1893-oakid_1" }
+            }
         }
-    }
-]
+    }],
+    "included": [{
+        "type": "user",
+        "id": "user-1893-oakid_1",
+        "attributes": {
+            "userId": "user-1893-oakid",
+            "uniqueUserId": "user-1893-oakid_1",
+            "meetingId": "random-9826-kksu",
+            "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+            "fullName": "Richard Alam",
+            "role": "moderator",
+            "avatarUrl": "https://my-server/my-avatar.png",
+            "isPresenter": true,
+            "voiceMode": "TwoWay",
+            "voiceMethod": "WebRTC",
+            "hasVideo": false,
+            "clientType": "HTML5",
+            "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0",
+            "locale": "en_US",
+            "metadata": {
+                "userAge": 35,
+                "userRoleOnMoodle": "Professor - English 101"
+            }
+        }
+    }]
+}
 ```
 
 This endpoint retrieves all meetings currently created in the server. A meeting can be created but not running, so this can return also meetings that are not running.
@@ -119,10 +150,10 @@ This endpoint retrieves all meetings currently created in the server. A meeting 
 
 ### Query Parameters
 
-Parameter    | Required? | Default | Description
------------- | --------- | ------- | -----------
-onlyRunning  | No        | false   | If set to true, returns only the meetings currently running.
-includeUsers | No        | true    | If set to true, the result will also include the users currently in the meeting.
+Parameter         | Required? | Default | Description
+----------------- | --------- | ------- | -----------
+filter[running]=  | No        |         | If set to true, returns only the meetings currently running. If set to false, only the meetings not running. If not set (default), returns both.
+include=users     | No        | false   | If set, the result will also include the users currently in the meeting.
 
 
 ## Get Meeting
@@ -137,34 +168,40 @@ curl "https://example.com/api/v2/meetings/e7f6899eb3f495d95b697a8b76a9279c2626a3
 
 ```json
 {
-    "meetingId": "random-9826-kksu",
-    "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
-    "name": "Test",
-    "createTime": "2015-09-05T12:25:03.520Z",
-    "startTime": "2015-09-05T14:25:03.520Z",
-    "endTime": "0",
-    "voiceBridge": 76999,
-    "dialNumber": "613-555-1234",
-    "running": true,
-    "duration": 120,
-    "hasUserJoined": true,
-    "recording": true,
-    "hasBeenForciblyEnded": false,
-    "userCount": 5,
-    "moderatorCount": 2,
-    "listenerCount": 4,
-    "voiceUserCount": 3,
-    "videoCount": 3,
-    "maxUsers": 0,
-    "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
-    "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
-    "logoutUrl": "https://my-server/my-logout-url",
-    "autoStartRecording": false,
-    "allowStartStopRecording": true,
-    "locale": "en_US",
-    "metadata": {
-        "courseName": "English 101",
-        "integrationName": "Moodle"
+    "data": {
+        "type": "meeting",
+        "id": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+        "attributes": {
+            "meetingId": "random-9826-kksu",
+            "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+            "name": "Test",
+            "createTime": "2015-09-05T12:25:03.520Z",
+            "startTime": "2015-09-05T14:25:03.520Z",
+            "endTime": "0",
+            "voiceBridge": 76999,
+            "dialNumber": "613-555-1234",
+            "running": true,
+            "duration": 120,
+            "hasUserJoined": true,
+            "recording": true,
+            "hasBeenForciblyEnded": false,
+            "userCount": 5,
+            "moderatorCount": 2,
+            "listenerCount": 4,
+            "voiceUserCount": 3,
+            "videoCount": 3,
+            "maxUsers": 0,
+            "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
+            "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
+            "logoutUrl": "https://my-server/my-logout-url",
+            "autoStartRecording": false,
+            "allowStartStopRecording": true,
+            "locale": "en_US",
+            "metadata": {
+                "courseName": "English 101",
+                "integrationName": "Moodle"
+            }
+        }
     }
 }
 ```
@@ -177,10 +214,10 @@ Returns information about an specific meeting.
 
 ### URL Parameters
 
-Parameter    | Required? | Default | Description
------------- | --------- | ------- | -----------
-:id          | Yes       |         | The unique ID of the meeting to retrieve
-includeUsers | No        | true    | If set to true, the result will also include the users currently in the meeting.
+Parameter         | Required? | Default | Description
+----------------- | --------- | ------- | -----------
+:id               | Yes       |         | The unique ID of the meeting to retrieve
+include=users     | No        | false   | If set, the result will also include the users currently in the meeting.
 
 
 ## Create Meeting
@@ -190,21 +227,26 @@ includeUsers | No        | true    | If set to true, the result will also includ
 curl -X POST "https://example.com/api/v2/meetings"
   -H "Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"
   -d '{ 
-    "meetingId": "random-9826-kksu",
-    "name": "Test",
-    "voiceBridge": 76999,
-    "dialNumber": "613-555-1234",
-    "duration": 120,
-    "recording": true,
-    "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
-    "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
-    "logoutUrl": "https://my-server/my-logout-url",
-    "autoStartRecording": false,
-    "allowStartStopRecording": true,
-    "locale": "en_US",
-    "metadata": {
-        "courseName": "English 101",
-        "integrationName": "Moodle"
+    "data": {
+        "type": "meeting",
+        "attributes": {
+            "meetingId": "random-9826-kksu",
+            "name": "Test",
+            "voiceBridge": 76999,
+            "dialNumber": "613-555-1234",
+            "duration": 120,
+            "recording": true,
+            "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
+            "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
+            "logoutUrl": "https://my-server/my-logout-url",
+            "autoStartRecording": false,
+            "allowStartStopRecording": true,
+            "locale": "en_US",
+            "metadata": {
+                "courseName": "English 101",
+                "integrationName": "Moodle"
+            }
+        }
     }
   }'
 ```
@@ -213,34 +255,40 @@ curl -X POST "https://example.com/api/v2/meetings"
 
 ```json
 {
-    "meetingId": "random-9826-kksu",
-    "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
-    "name": "Test",
-    "createTime": "2015-09-05T12:25:03.520Z",
-    "startTime": "2015-09-05T14:25:03.520Z",
-    "endTime": "0",
-    "voiceBridge": 76999,
-    "dialNumber": "613-555-1234",
-    "running": true,
-    "duration": 120,
-    "hasUserJoined": true,
-    "recording": true,
-    "hasBeenForciblyEnded": false,
-    "userCount": 5,
-    "moderatorCount": 2,
-    "listenerCount": 4,
-    "voiceUserCount": 3,
-    "videoCount": 3,
-    "maxUsers": 0,
-    "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
-    "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
-    "logoutUrl": "https://my-server/my-logout-url",
-    "autoStartRecording": false,
-    "allowStartStopRecording": true,
-    "locale": "en_US",
-    "metadata": {
-        "courseName": "English 101",
-        "integrationName": "Moodle"
+    "data": {
+        "type": "meeting",
+        "id": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+        "attributes": {
+            "meetingId": "random-9826-kksu",
+            "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+            "name": "Test",
+            "createTime": "2015-09-05T12:25:03.520Z",
+            "startTime": "2015-09-05T14:25:03.520Z",
+            "endTime": "0",
+            "voiceBridge": 76999,
+            "dialNumber": "613-555-1234",
+            "running": true,
+            "duration": 120,
+            "hasUserJoined": true,
+            "recording": true,
+            "hasBeenForciblyEnded": false,
+            "userCount": 5,
+            "moderatorCount": 2,
+            "listenerCount": 4,
+            "voiceUserCount": 3,
+            "videoCount": 3,
+            "maxUsers": 0,
+            "welcome": "Welcome to %%CONFNAME%%! Dial %%DIALNUM%% to join the voice conference.",
+            "moderatorOnlyMessage": "You’re a moderator, please use your powers wisely.",
+            "logoutUrl": "https://my-server/my-logout-url",
+            "autoStartRecording": false,
+            "allowStartStopRecording": true,
+            "locale": "en_US",
+            "metadata": {
+                "courseName": "English 101",
+                "integrationName": "Moodle"
+            }
+        }
     }
 }
 ```

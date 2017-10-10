@@ -14,12 +14,13 @@
 
 (Use this also as guidelines when extending the API.)
 
-* No URL form encoding, JSON is used in all requests and responses. URL encoding doesn’t support data types and has no hierarchy [1].
+* Follow [http://jsonapi.org](jsonapi.org).
+* JSON is used in all requests and responses.
+* All responses and body of requests are in JSON and use the content type `application/vnd.api+json`.
 * The authentication method uses HMAC-SHA256 to calculate the signature.
 * The authentication method is based on OAuth 2.0. It supports a simple method when you have HTTPS, and a more complicated method which signs the request that can be used for both HTTP and HTTPS.
-* Responses are always in JSON using the content type `application/json`.
 * API calls return JSON values instead of redirects. The body of the response indicates whenever it should redirect the user to another URL.
-* The major version of the API is included in the URL, as in “/api/v1/”.
+* The major version of the API is included in the URL, as in “/api/v2/”.
 * API calls that update or create a resource return the resource in their response.
 * CamelCase is used on URLs and returned parameters.
 * API calls return pretty formatted data by default. gzip compression is supported to reduce the size of the responses.

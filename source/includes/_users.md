@@ -65,13 +65,18 @@ clients         | Object  | A JSON object with the URLs for all the clients avai
 curl -X POST "https://example.com/api/v2/meetings"
   -H "Authorization: Bearer 6b3701cbbedb4ba88b79920d8c2955f2"
   -d '{ 
-    "userId": "user-1893-oakid",
-    "fullName": "Richard Alam",
-    "role": "moderator",
-    "avatarUrl": "https://my-server/my-image.jpg",
-    "metadata": {
-        "worksAt": "BigBlueButton",
-        "roleOnMoodle": "Professor - Filipino 101"
+    "data": {
+        "type": "user",
+        "attributes": {
+            "userId": "user-1893-oakid",
+            "fullName": "Richard Alam",
+            "role": "moderator",
+            "avatarUrl": "https://my-server/my-image.jpg",
+            "metadata": {
+                "worksAt": "BigBlueButton",
+                "roleOnMoodle": "Professor - Filipino 101"
+            }
+        }
     }
   }'
 ```
@@ -80,36 +85,42 @@ curl -X POST "https://example.com/api/v2/meetings"
 
 ```json
 {
-    "userId": "user-1893-oakid",
-    "uniqueUserId": "user-1893-oakid_1",
-    "meetingId": "random-9826-kksu",
-    "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
-    "fullName": "Richard Alam",
-    "role": "moderator",
-    "avatarUrl": "https://my-server/my-avatar.png",
-    "isPresenter": true,
-    "voiceMode": "TwoWay",
-    "voiceMethod": "WebRTC",
-    "hasVideo": false,
-    "clientType": "HTML5",
-    "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0",
-    "locale": "en_US",
-    "metadata": {
-        "userAge": 35,
-        "userRoleOnMoodle": "Professor - English 101"
-    },
-    "clients": {
-        "WebFlash": {
-            "url": "https://bigbluebutton.org/client.html?token=9dulgkl72kmy",
-            "default": true
-        },
-        "HTML5": {
-            "url": "https://bigbluebutton.org/html5?token=9dulgkl72kmy",
-            "default": false
-        },
-        "Mobile": {
-            "url": "https://bigbluebutton.org/mobile.html?token=9dulgkl72kmy",
-            "default": false
+    "data": {
+        "type": "user",
+        "id": "user-1893-oakid_1",
+        "attributes": {
+            "userId": "user-1893-oakid",
+            "uniqueUserId": "user-1893-oakid_1",
+            "meetingId": "random-9826-kksu",
+            "uniqueMeetingId": "e7f6899eb3f495d95b697a8b76a9279c2626a37e-1507664924353",
+            "fullName": "Richard Alam",
+            "role": "moderator",
+            "avatarUrl": "https://my-server/my-avatar.png",
+            "isPresenter": true,
+            "voiceMode": "TwoWay",
+            "voiceMethod": "WebRTC",
+            "hasVideo": false,
+            "clientType": "HTML5",
+            "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0",
+            "locale": "en_US",
+            "metadata": {
+                "userAge": 35,
+                "userRoleOnMoodle": "Professor - English 101"
+            },
+            "clients": {
+                "WebFlash": {
+                    "url": "https://bigbluebutton.org/client.html?token=9dulgkl72kmy",
+                    "default": true
+                },
+                "HTML5": {
+                    "url": "https://bigbluebutton.org/html5?token=9dulgkl72kmy",
+                    "default": false
+                },
+                "Mobile": {
+                    "url": "https://bigbluebutton.org/mobile.html?token=9dulgkl72kmy",
+                    "default": false
+                }
+            }
         }
     }
 }
